@@ -1,24 +1,23 @@
 async function translateText() {
   const text = document.getElementById("inputText").value;
-  const sourceLang = document.getElementById("sourceLang").value;
-  const targetLang = document.getElementById("targetLang").value;
+  const source = document.getElementById("sourceLang").value;
+  const target = document.getElementById("targetLang").value;
 
-  const response = await fetch("http://127.0.0.1:5000/translate", {
+  const res = await fetch("/translate", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({
-      source_lang: sourceLang,
-      target_lang: targetLang,
-      text: text
-    })
+    body: JSON.stringify({ text, source, target })
   });
 
-  const data = await response.json();
-  if (data.translation) {
-    document.getElementById("outputBox").innerText = data.translation;
+  const data = await res.json();
+  const outputBox = document.getElementById("outputBox");
+  outputBox.style.display = "block";
+
+  if (data.translated_text) {
+    outputBox.innerText = data.translated_text;
   } else {
-    document.getElementById("outputBox").innerText = "Error: " + data.error;
+    outputBox.innerText = "Error: " + data.error;
   }
 }
